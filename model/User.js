@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-// const jwt = require('jsonwebtoken')
-// require('dotenv').config()
-// const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 
 const userSchema = Schema({
@@ -36,9 +36,9 @@ userSchema.methods.toJSON = function () {
     return _doc
 }
 
-// userSchema.methods.generateToken = function (){
-//     return jwt.sign({ _id : this._id}, JWT_SECRET_KEY)
-// }
+userSchema.methods.generateToken = function (){
+    return jwt.sign({ _id : this._id}, JWT_SECRET_KEY)
+}
 
 const User = mongoose.model('User', userSchema)
 
