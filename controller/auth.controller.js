@@ -1,3 +1,4 @@
+const User = require('../model/User')
 const authController = {}
 const jwt = require('jsonwebtoken')
 
@@ -11,7 +12,18 @@ authController.authenticate = async (req, res, next) => {
             if (err) throw new Error('invalid token2')
             req.userId = payload._id
             next()
+            
         })
+    } catch ({message}) {
+        res.status(400).json({status : 'fail', err : message})
+    }
+}
+
+authController.checkAdminPermission = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.userId)
+        if (user?.level !== 'admin') throw new Error('권한이 없습니다.')
+        next()
     } catch ({message}) {
         res.status(400).json({status : 'fail', err : message})
     }
