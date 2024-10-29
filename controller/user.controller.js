@@ -10,7 +10,7 @@ userController.createUser = async (req, res) => {
         if (!email || !name || !password ) throw new Error('빈 항목이 존재합니다')
         if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email)) throw new Error('이메일 형식을 맞춰주세요')
         if (!/^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9| ]+$/.test(name)) throw new Error('닉네임은 영어와 한글로만 만들어주세요')
-        if (!/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/.test(password)) throw new Error('비밀번호는 영어, 숫자 조합 8자리 이상으로 만들어주세요')
+        // if (!/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/.test(password)) throw new Error('비밀번호는 영어, 숫자 조합 8자리 이상으로 만들어주세요')
         const user = await User.findOne({ email })
 
         if (user) throw new Error('이미 가입되어 있습니다')
