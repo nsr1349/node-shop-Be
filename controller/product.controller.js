@@ -13,4 +13,13 @@ productController.createProduct = async (req, res) => {
     }
 }
 
+productController.getProduct = async (req, res) => {
+    try {
+        const products = await Product.find({}).sort({ createdAt: -1 })
+        res.status(200).json({status : 'success', products })
+    } catch ({message}) {
+        res.status(400).json({status : 'fail', message})
+    }
+}
+
 module.exports = productController
