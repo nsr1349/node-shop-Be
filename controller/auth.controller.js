@@ -15,7 +15,7 @@ authController.authenticate = async (req, res, next) => {
             
         })
     } catch ({message}) {
-        res.status(400).json({status : 'fail', err : message})
+        res.status(400).json({status : 'fail', message})
     }
 }
 
@@ -25,7 +25,7 @@ authController.checkAdminPermission = async (req, res, next) => {
         if (user?.level !== 'admin') throw new Error('권한이 없습니다.')
         next()
     } catch ({message}) {
-        res.status(400).json({status : 'fail', err : message})
+        res.status(400).json({status : 'fail', message})
     }
 }
 
