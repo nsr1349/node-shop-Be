@@ -15,8 +15,23 @@ productController.createProduct = async (req, res) => {
 
 productController.getProduct = async (req, res) => {
     try {
-        const products = await Product.find({}).sort({ createdAt: -1 })
-        res.status(200).json({status : 'success', products })
+        const { page, q, size, active } = req.query
+        const cond = q ? {name:{$regex:q, $options:'i'}} : {}
+        if (active === 'true') cond.status = 'active';
+        
+        let query = Product.find(cond).sort({ createdAt: -1 })
+        let response = {status : 'success' }
+        
+        if(page){
+            query.skip((page-1)*size).limit(size)
+            const totalItemNum = await Product.countDocuments(cond);
+            response.totalPageNum =  Math.ceil(totalItemNum / size)
+        }
+
+        const products = await query.exec()
+        response.products = products
+        
+        res.status(200).json(response)
     } catch ({message}) {
         res.status(400).json({status : 'fail', message})
     }
