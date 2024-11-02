@@ -11,7 +11,9 @@ cartController.addCart = async (req, res) => {
             cart = new Cart({userId})
             cart.items = [{productId, size, qty}]
             await cart.save()
-            res.status(200).json({status : 'success', cart})
+            res.status(200).json({status : 'success', cart , cartLen : cart.items.length})
+            //리팩토링 예정
+            return
         }
 
         const existItem = cart.items.find(
@@ -24,7 +26,7 @@ cartController.addCart = async (req, res) => {
         cart.items = [...cart.items, {productId, size, qty}]
         await cart.save()
 
-        res.status(200).json({status : 'success', cart})
+        res.status(200).json({status : 'success', cart , cartLen : cart.items.length})
 
     } catch ({message}) {
         res.status(400).json({status : 'fail', message})
