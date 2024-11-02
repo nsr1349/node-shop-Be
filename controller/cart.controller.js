@@ -2,7 +2,6 @@ const Cart = require('../model/Cart')
 const cartController = {}
 
 cartController.addCart = async (req, res) => {
-    console.log('ll')
     try {
         const { userId } = req
         const { productId , size, qty } = req.body
@@ -22,8 +21,19 @@ cartController.addCart = async (req, res) => {
         cart.items = [...cart.items, {productId, size, qty}]
         await cart.save()
 
-        res.status(200).json({status : 'success', cart , cartLen : cart.items.length})
+        res.status(200).json({status : 'success', cart })
 
+    } catch ({message}) {
+        res.status(400).json({status : 'fail', message})
+    }
+}
+
+cartController.getCart = async (req, res) => {
+    try {
+        const { userId } = req
+        console.log(userId)
+        let cart = await Cart.findOne({ userId })
+        res.status(200).json({status : 'success', cart})
     } catch ({message}) {
         res.status(400).json({status : 'fail', message})
     }
