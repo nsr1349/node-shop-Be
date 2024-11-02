@@ -9,11 +9,7 @@ cartController.addCart = async (req, res) => {
         let cart = await Cart.findOne({ userId })
         if (!cart) {
             cart = new Cart({userId})
-            cart.items = [{productId, size, qty}]
-            await cart.save()
-            res.status(200).json({status : 'success', cart , cartLen : cart.items.length})
-            //리팩토링 예정
-            return
+            cart.items = []
         }
 
         const existItem = cart.items.find(
