@@ -19,28 +19,40 @@ productController.getProduct = async (req, res) => {
         const cond = q ? {name:{$regex:q, $options:'i'}, isDeleted : false} : {}
         cond.isDeleted = false
         if (active === 'true') cond.status = 'active'
-        
+            
         let query = Product.find(cond).sort({ createdAt: -1 })
         let response = {status : 'success' }
-        
+            
         if(page){
             query.skip((page-1)*size).limit(size)
             const totalItemNum = await Product.countDocuments(cond);
             response.totalPageNum =  Math.ceil(totalItemNum / size)
         }
-
+    
         const products = await query.exec()
         response.products = products
-        
+            
         res.status(200).json(response)
     } catch ({message}) {
         res.status(400).json({status : 'fail', message})
     }
 }
 
+productController.getSingleProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id)
+
+        res.status(200).json({status : 'success', product})
+    } catch ({message}) {
+        res.status(400).json({status : 'fail', message})
+    }
+}
+
+
 productController.updateProduct = async (req, res) => {
     try {
         const { sku , name, size, image, category, description, price, stock, status} = req.body 
+        console.log(size)
         const product = await Product.findByIdAndUpdate(
             {_id : req.params.id }, 
             { sku , name, size, image, category, description, price, stock, status},
