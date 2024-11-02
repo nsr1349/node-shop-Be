@@ -8,24 +8,13 @@ const cartSchema = Schema({
             type : mongoose.ObjectId,
             ref : User,
         },
-        items: {
-            type : {
-                productId : {
-                    type : mongoose.ObjectId,
-                    ref : Product
-                },
-                size : {
-                    type : String,
-                    required : true
-                },
-                qty : {
-                    type : Number,
-                    required : true,
-                    default : 1
-                },
-            },
-            require : true,
-        },
+        items : [
+            {
+                productId : { type : mongoose.ObjectId, ref : Product },
+                size : { type : String, required : true },
+                qty : { type : Number, required : true, default : 1 },
+            }
+        ]
     },
     { timestamps : true }
 )
