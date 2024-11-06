@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const User = require('./User') 
+const Product = require('./Product') 
 
 const orderSchema = Schema({
         shipTo : {
@@ -12,6 +14,10 @@ const orderSchema = Schema({
         },
         totalPrice : {
             type : Number,
+            required : true,
+        },
+        orderNum : {
+            type : String,
             required : true,
         },
         userId : {
