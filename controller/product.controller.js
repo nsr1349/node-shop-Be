@@ -83,24 +83,26 @@ productController.deleteProduct = async (req, res) => {
 }
 
 
-productController.checkStock = async (item) => {
-        const product = await Product.findById(item.productId)
+productController.checkStock = async ({productId, size, qty }) => {
+        const { stock, name } = await Product.findById(productId)
 
-        if (product.stock[item.size] < item.qty){
-            return { isVerify : false,  message : `${product.name} 의 ${item.size} 재고가 부족합니다.` }
-        }
+        if (stock[size] < qty) return { isVerify : false,  message : `${name} 의 ${size} 재고가 부족합니다.` }
 
-        const newStock = {...product.stock}
-        newStock[item.size] -= item.qty
-        product.stock = newStock
-        await product.save()
         return { isVerify : true }
 }
 
+productController.minusStock = async (item) => {
+    const product = await Product.findById(item.productId)
+
+    const newStock = {...product.stock}
+    newStock[item.size] -= item.qty
+    product.stock = newStock
+    await product.save()
+}
 
 productController.checkItemListStock = async (itemList) => {
         const insufficientStockItems = []
-        
+
         await Promise.all(
             itemList.map( async (item)=> {
                 const stockCheck = await productController.checkStock(item)
@@ -110,6 +112,15 @@ productController.checkItemListStock = async (itemList) => {
                 return stockCheck
             })
         )
+
+        if (insufficientStockItems.length === 0){
+            await Promise.all(
+                itemList.map( async (item)=> {
+                    await productController.minusStock(item)
+                })
+            )
+        }
+
         return insufficientStockItems
 }
 
