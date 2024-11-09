@@ -28,25 +28,6 @@ userController.createUser = async (req, res) => {
     }
 }
 
-userController.loginWithEmail = async (req, res) => {
-    try {
-        const { email, password } = req.body 
-        const user = await User.findOne({ email }).select('-__v -createdAt -updatedAt')
-        if (user){
-            const isMath = bcrypt.compareSync(password, user.password)
-            if (isMath){
-                const token = user.generateToken()
-                return res.status(200).json({status : 'success', user, token})
-            }
-        } else {
-            throw new Error('미가입자입니다')
-        }
-        throw new Error('아이디나 비밀번호가 다릅니다')
-    } catch ({message}) {
-        res.status(400).json({status : 'fail', err : message})
-    }
-}
-
 userController.getUser = async (req, res) => {
     try {
         const user = await User.findById(req.userId)
